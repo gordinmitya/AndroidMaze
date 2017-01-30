@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.Log;
 
 public class Player implements Drawable {
@@ -14,7 +15,7 @@ public class Player implements Drawable {
     public Player() {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.RED);
-        point = new Point(0,0);
+        point = new Point(0, 0);
     }
 
     public void move(int diffX, int diffY) {
@@ -24,7 +25,7 @@ public class Player implements Drawable {
     }
 
     @Override
-    public void draw(Canvas canvas) {
-        canvas.drawRect(point.x, point.y,point.x + 50,point.y  +50,paint);
+    public void draw(Canvas canvas, Rect rect) {
+        canvas.drawRect(point.x, point.y, point.x + 50, point.y + 50, paint);
     }
 }
