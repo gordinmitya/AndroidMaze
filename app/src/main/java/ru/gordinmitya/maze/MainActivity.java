@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,11 +20,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        String title = savedInstanceState.getString("TITLE");
+        Log.i(MainActivity.class.getName(), title);
+
         GameManager gameManager = new GameManager();
         view = new MazeView(this, gameManager);
         setContentView(view);
 
         gestureDetector = new GestureDetector(this, gameManager);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putString("TITLE", "Hello, World!");
     }
 
     @Override

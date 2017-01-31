@@ -13,12 +13,18 @@ import java.util.Random;
 import java.util.Stack;
 
 public class Maze implements Drawable {
+
     private Paint wallPaint;
     private final boolean[][] array;
+
+    public int getSize() {
+        return size;
+    }
+
     private final int size;
-    private final Point end = new Point(1, 1);
     private int bestScore = 0;
     private Point start;
+    private final Point end = new Point(1, 1);
 
     public Maze(int size) {
         wallPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -26,6 +32,14 @@ public class Maze implements Drawable {
         this.size = size;
         array = new boolean[size][size];
         generateMaze();
+    }
+
+    public Point getStart() {
+        return start;
+    }
+
+    public Point getEnd() {
+        return end;
     }
 
     private void generateMaze() {
@@ -82,14 +96,22 @@ public class Maze implements Drawable {
         }
     }
 
+    public boolean isCrossroad(int x, int y) {
+        return isUsedCell(x, y);
+    }
+
+    public boolean canPlayerGoTo(int x, int y) {
+        return array[y][x];
+    }
+
     private boolean isUsedCell(int x, int y) {
         if (x < 0 || y < 0 || x >= size - 1 || y >= size - 1) {
             return true;
         }
         return array[y - 1][x] //left
-                || array[y][x - 1]//top
-                || array[y + 1][x]//right
-                || array[y][x + 1];//bottom
+                || array[y][x - 1] //top
+                || array[y + 1][x] //right
+                || array[y][x + 1]; //bottom
     }
 
     @Override

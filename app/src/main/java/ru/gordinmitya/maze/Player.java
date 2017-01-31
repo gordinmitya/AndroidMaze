@@ -7,25 +7,29 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
 
-public class Player implements Drawable {
+public class Player extends Dot {
 
-    private Paint paint;
-    private Point point;
-
-    public Player() {
-        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.RED);
-        point = new Point(0, 0);
+    public Player(Point start, int size) {
+        super(size, start, getPaint());
     }
 
-    public void move(int diffX, int diffY) {
-        point.x += diffX;
-        point.y += diffY;
+    private static Paint getPaint() {
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setColor(Color.RED);
+        return paint;
+    }
+
+    public void goTo(int x, int y) {
+        point.x = x;
+        point.y = y;
         Log.i("Player", String.format("%d %d", point.x, point.y));
     }
 
-    @Override
-    public void draw(Canvas canvas, Rect rect) {
-        canvas.drawRect(point.x, point.y, point.x + 50, point.y + 50, paint);
+    public int getX() {
+        return point.x;
+    }
+
+    public int getY() {
+        return point.y;
     }
 }
