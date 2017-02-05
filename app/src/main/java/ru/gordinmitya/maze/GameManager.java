@@ -9,6 +9,11 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +26,15 @@ public class GameManager extends GestureDetector.SimpleOnGestureListener {
     private Rect rect = new Rect();
     private int screenSize;
 
+
+    // конструктор для нового лабиринта
     public GameManager() {
         create(5);
+    }
+
+    // конструктор для загрузки лабиринта из потока
+    public GameManager(InputStream is) {
+        loadFromStream(is);
     }
 
     private void create(int size) {
@@ -96,4 +108,53 @@ public class GameManager extends GestureDetector.SimpleOnGestureListener {
                 (height + screenSize) / 2
         );
     }
+
+    public void saveToStream(OutputStream os) {
+        OutputStreamWriter osw = null;
+        try {
+            try {
+                // Вспомогательный класс для записи в  поток данных
+                osw = new OutputStreamWriter(os);
+                for (Drawable item : drawables) {
+                    item.saveToStream(osw);
+                }
+            } finally {
+                if (osw != null) osw.close();
+            }
+
+        } catch (Exception e) {
+            Log.e("Maze", "Ошибка записи  в поток");
+        }
+
+    }
+
+
+    public void loadFromStream(InputStream is) {
+        InputStreamReader isw = null;
+        try {
+            try {
+                // Вспомогательный класс для чтения потока данных
+                isw = new InputStreamReader(is);
+                drawables.clear();
+                //конструктор с загрузкой лабиринта из потока
+                maze = new Maze(isw);
+                drawables.add(maze);
+                int size = maze.getSize();
+                exit = new Exit(maze.getEnd(), size);
+                exit.loadFromStream(isw);
+                drawables.add(exit);
+                player = new Player(maze.getStart(), size);
+                player.loadFromStream(isw);
+                drawables.add(player);
+            } finally {
+                if (isw != null) {
+                    isw.close();
+                }
+            }
+        } catch (IOException e) {
+            Log.e("Maze", "Ошибка чтения  из потока");
+        }
+    }
+
 }
+
