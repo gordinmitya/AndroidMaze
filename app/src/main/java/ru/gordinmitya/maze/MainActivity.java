@@ -21,8 +21,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String title = savedInstanceState.getString("TITLE");
-        Log.i(MainActivity.class.getName(), title);
+        if (savedInstanceState != null)
+        {
+            String title = savedInstanceState.getString("TITLE");
+            Log.i(MainActivity.class.getName(), title);
+        }
 
         GameManager gameManager = new GameManager();
         view = new MazeView(this, gameManager);
