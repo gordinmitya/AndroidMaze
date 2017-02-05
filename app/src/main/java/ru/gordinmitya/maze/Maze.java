@@ -7,6 +7,9 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -15,24 +18,37 @@ import java.util.Stack;
 public class Maze implements Drawable {
 
     private Paint wallPaint;
-    private final boolean[][] array;
+    private boolean[][] array;
 
     public int getSize() {
         return size;
     }
 
-    private final int size;
+    private int size;
     private int bestScore = 0;
     private Point start;
-    private final Point end = new Point(1, 1);
+    private Point end = new Point(1, 1);
 
-    public Maze(int size) {
+    // общие настройки конструктора
+    private void initMaze() {
         wallPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         wallPaint.setColor(Color.BLUE);
+    }
+
+    public Maze(int size) {
+        initMaze();
         this.size = size;
         array = new boolean[size][size];
+        // генерация лабиринта
         generateMaze();
     }
+
+    public Maze(InputStreamReader isw) {
+        initMaze();
+        // загрузка лабиринта из потока
+        loadFromStream(isw);
+    }
+
 
     public Point getStart() {
         return start;
@@ -134,4 +150,50 @@ public class Maze implements Drawable {
             }
         }
     }
+
+
+    @Override
+    public void loadFromStream(InputStreamReader isw) {
+        try {
+            int x = isw.read();
+            int y = isw.read();
+            start = new Point(x, y);
+            x = isw.read();
+            y = isw.read();
+            end = new Point(x, y);
+            size = isw.read();
+            array = new boolean[size][size];
+            //считываем лабиринт, 1=true
+            for (int i = 0; i < size; i++)
+                for (int j = 0; j < size; j++)
+                    array[i][j] = isw.read() == 1;
+        } catch (IOException e) {
+            // сохраняем в логи и передаём ошибку далее
+            Log.e("Maze", "Ошибка чтения лабиринта из потока");
+            new IOException("Ошибка чтения лабиринта из потока: " + e.getMessage());
+        }
+
+    }
+
+    @Override
+    public void saveToStream(OutputStreamWriter osw) {
+        try {
+            osw.write(start.x);
+            osw.write(start.y);
+            osw.write(end.x);
+            osw.write(end.y);
+            osw.write(size);
+            // сохраняем лабиринт, true сохраняем как 1, иначе 0
+            for (int i = 0; i < size; i++)
+                for (int j = 0; j < size; j++)
+                    osw.write(array[i][j] == true ? 1 : 0);
+            osw.flush();
+        } catch (IOException e) {
+            // сохраняем в лог
+            Log.e("Maze", "Ошибка сохранения лабиринта в поток");
+        }
+
+    }
+
+
 }

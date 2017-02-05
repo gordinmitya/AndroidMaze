@@ -4,6 +4,11 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.util.Log;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 public class Dot implements Drawable {
     private int size;
@@ -30,4 +35,34 @@ public class Dot implements Drawable {
                 rect.top + point.y * cellSize + cellSize,
                 paint);
     }
+
+
+    @Override
+    public void saveToStream(OutputStreamWriter osw) {
+
+        try {
+            osw.write(point.x);
+            osw.write(point.y);
+            osw.write(size);
+            osw.flush();
+        } catch (Exception e) {
+            Log.e("Maze", "Ошибка сохранения Dot в поток");
+        }
+    }
+
+    @Override
+    public void loadFromStream(InputStreamReader isw) {
+        try {
+            point.x = isw.read();
+            point.y = isw.read();
+
+            size = isw.read();
+        } catch (IOException e) {
+            // сохраняем в логи и передаём ошибку далее
+            Log.e("Maze", "Ошибка чтения Dot из потока");
+            new IOException("Ошибка чтения Dot из потока: " + e.getMessage());
+        }
+    }
+
+
 }
