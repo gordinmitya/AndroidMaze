@@ -21,20 +21,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String title = savedInstanceState.getString("TITLE");
-        Log.i(MainActivity.class.getName(), title);
-
         GameManager gameManager = new GameManager();
         view = new MazeView(this, gameManager);
         setContentView(view);
 
         gestureDetector = new GestureDetector(this, gameManager);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        outState.putString("TITLE", "Hello, World!");
     }
 
     @Override
