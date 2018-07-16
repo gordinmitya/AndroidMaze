@@ -1,10 +1,8 @@
 package ru.gordinmitya.maze;
 
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,6 +25,7 @@ public class GameManager extends GestureDetector.SimpleOnGestureListener {
 
     private void create(int size) {
         drawables.clear();
+
         maze = new Maze(size);
         drawables.add(maze);
         exit = new Exit(maze.getEnd(), size);
