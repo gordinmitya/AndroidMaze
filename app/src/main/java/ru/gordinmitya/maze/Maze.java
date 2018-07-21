@@ -1,10 +1,13 @@
 package ru.gordinmitya.maze;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.util.LinkedList;
@@ -15,6 +18,7 @@ import java.util.Stack;
 public class Maze implements Drawable {
 
     private Paint wallPaint;
+    private int backgroundColor;
     private final boolean[][] array;
 
     public int getSize() {
@@ -26,9 +30,10 @@ public class Maze implements Drawable {
     private Point start;
     private final Point end = new Point(1, 1);
 
-    public Maze(int size) {
+    public Maze(Context context, int size) {
         wallPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        wallPaint.setColor(Color.BLUE);
+        wallPaint.setColor(ContextCompat.getColor(context, R.color.gm_road));
+        backgroundColor = ContextCompat.getColor(context, R.color.gm_background);
         this.size = size;
         array = new boolean[size][size];
         generateMaze();
@@ -116,6 +121,7 @@ public class Maze implements Drawable {
 
     @Override
     public void draw(Canvas canvas, Rect rect) {
+        canvas.drawColor(backgroundColor);
         float cellSize = (float) (rect.right - rect.left) / size;
         for (int i = 0; i < size; ++i) {
             for (int j = 0; j < size; ++j) {

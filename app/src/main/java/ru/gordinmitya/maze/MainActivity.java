@@ -14,7 +14,6 @@ import static ru.gordinmitya.maze.MovementDirection.UP;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MazeView view;
     private GestureDetector gestureDetector;
     private InputListener inputListener;
 
@@ -22,9 +21,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        GameManager gameManager = new GameManager();
+        GameManager gameManager = new GameManager(this);
         inputListener = gameManager;
-        view = new MazeView(this, gameManager);
+        MazeView view = new MazeView(this, gameManager);
         setContentView(view);
 
         gestureDetector = new GestureDetector(this, new GestureListener(gameManager));

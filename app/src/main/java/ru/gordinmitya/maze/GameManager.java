@@ -1,6 +1,7 @@
 package ru.gordinmitya.maze;
 
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.view.View;
@@ -10,6 +11,7 @@ import java.util.List;
 
 public class GameManager implements InputListener {
     private List<Drawable> drawables = new ArrayList<>();
+    private Context context;
     private View view;
     private Exit exit;
     private Player player;
@@ -17,18 +19,19 @@ public class GameManager implements InputListener {
     private Rect rect = new Rect();
     private int screenSize;
 
-    public GameManager() {
-        create(5);
+    public GameManager(Context context) {
+        this.context = context;
+        create(41);
     }
 
     private void create(int size) {
         drawables.clear();
 
-        maze = new Maze(size);
+        maze = new Maze(context, size);
         drawables.add(maze);
-        exit = new Exit(maze.getEnd(), size);
+        exit = new Exit(context, maze.getEnd(), size);
         drawables.add(exit);
-        player = new Player(maze.getStart(), size);
+        player = new Player(context, maze.getStart(), size);
         drawables.add(player);
     }
 
