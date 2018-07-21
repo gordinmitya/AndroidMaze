@@ -3,14 +3,12 @@ package ru.gordinmitya.maze;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameManager extends GestureDetector.SimpleOnGestureListener {
+public class GameManager implements InputListener {
     private List<Drawable> drawables = new ArrayList<>();
     private View view;
     private Exit exit;
@@ -35,17 +33,25 @@ public class GameManager extends GestureDetector.SimpleOnGestureListener {
     }
 
     @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        int diffX, diffY;
-        diffX = Math.round(e2.getX() - e1.getX());
-        diffY = Math.round(e2.getY() - e1.getY());
-        if (Math.abs(diffX) > Math.abs(diffY)) {
-            diffX = diffX > 0 ? 1 : -1;
-            diffY = 0;
-        } else {
-            diffX = 0;
-            diffY = diffY > 0 ? 1 : -1;
+    public void onMove(MovementDirection direction) {
+        int diffX = 0;
+        int diffY = 0;
+
+        switch (direction) {
+            case LEFT:
+                diffX = -1;
+                break;
+            case UP:
+                diffY = -1;
+                break;
+            case RIGHT:
+                diffX = 1;
+                break;
+            case DOWN:
+                diffY = 1;
+                break;
         }
+
         int stepX = player.getX();
         int stepY = player.getY();
 
@@ -67,12 +73,11 @@ public class GameManager extends GestureDetector.SimpleOnGestureListener {
         }
         player.goTo(stepX, stepY);
 
-        if (exit.getPoint().equals(player.getPoint())) {
+        if (exit.equals(player)) {
             create(maze.getSize() + 5);
         }
 
         view.invalidate();
-        return super.onFling(e1, e2, velocityX, velocityY);
     }
 
     public void draw(Canvas canvas) {
