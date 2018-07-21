@@ -2,7 +2,7 @@
 <resources>
 
      <color name="gm_background">#303050</color>
-     <color name="gm_road">#f7e0a5</color>
+     <color name="gm_wall">#f7e0a5</color>
      <color name="gm_exit">#00a888</color>
      <color name="gm_player">#df0024</color>
 

@@ -13,15 +13,13 @@ public class GameManager implements InputListener {
     private List<Drawable> drawables = new ArrayList<>();
     private Context context;
     private View view;
-    private Exit exit;
     private Player player;
     private Maze maze;
     private Rect rect = new Rect();
-    private int screenSize;
 
     public GameManager(Context context) {
         this.context = context;
-        create(41);
+        create(31);
     }
 
     private void create(int size) {
@@ -29,8 +27,6 @@ public class GameManager implements InputListener {
 
         maze = new Maze(context, size);
         drawables.add(maze);
-        exit = new Exit(context, maze.getEnd(), size);
-        drawables.add(exit);
         player = new Player(context, maze.getStart(), size);
         drawables.add(player);
     }
@@ -76,7 +72,7 @@ public class GameManager implements InputListener {
         }
         player.goTo(stepX, stepY);
 
-        if (exit.equals(player)) {
+        if (player.getX() == 0 || player.getY() == 0) {
             create(maze.getSize() + 5);
         }
 
@@ -95,7 +91,7 @@ public class GameManager implements InputListener {
     }
 
     public void setScreenSize(int width, int height) {
-        screenSize = Math.min(width, height);
+        int screenSize = Math.min(width, height);
         rect.set(
                 (width - screenSize) / 2,
                 (height - screenSize) / 2,

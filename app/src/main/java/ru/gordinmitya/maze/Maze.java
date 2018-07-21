@@ -2,13 +2,10 @@ package ru.gordinmitya.maze;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,11 +25,11 @@ public class Maze implements Drawable {
     private final int size;
     private int bestScore = 0;
     private Point start;
-    private final Point end = new Point(1, 1);
+    private final Point end = new Point(0, 1);
 
     public Maze(Context context, int size) {
         wallPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        wallPaint.setColor(ContextCompat.getColor(context, R.color.gm_road));
+        wallPaint.setColor(ContextCompat.getColor(context, R.color.gm_wall));
         backgroundColor = ContextCompat.getColor(context, R.color.gm_background);
         this.size = size;
         array = new boolean[size][size];
@@ -56,7 +53,7 @@ public class Maze implements Drawable {
         }
         Random random = new Random();
         Stack<Point> stack = new Stack<>();
-        stack.push(end);
+        stack.push(new Point(1, 1));
         while (stack.size() > 0) {
             Point current = stack.peek();
             List<Point> unusedNeighbors = new LinkedList<>();
@@ -95,6 +92,10 @@ public class Maze implements Drawable {
                 if (bestScore < stack.size()) {
                     bestScore = stack.size();
                     start = current;
+                    // exit
+                    array[0][0] = true;
+                    array[0][1] = true;
+                    array[1][0] = true;
                 }
                 stack.pop();
             }
@@ -106,6 +107,8 @@ public class Maze implements Drawable {
     }
 
     public boolean canPlayerGoTo(int x, int y) {
+        if (x < 0 || y < 0) return false;
+        if (x > size || y > size) return false;
         return array[y][x];
     }
 
